@@ -19,10 +19,10 @@ class Database
 
         $dotenv->load();
 
-        $host = getenv('DB_HOST',true);
-        $dbname = getenv('DB_DATABASE',true);
-        $dbusername = getenv('DB_USERNAME',true);
-        $dbpassword = getenv('DB_PASSWORD',true);
+        $host = $_ENV['DB_HOST'];
+        $dbname = $_ENV['DB_DATABASE'];
+        $dbusername = $_ENV['DB_USERNAME'];
+        $dbpassword = $_ENV['DB_PASSWORD'];
 
         try {
             $this->pdo = new PDO("mysql:host=$host;dbname=$dbname", $dbusername, $dbpassword);
@@ -37,9 +37,3 @@ class Database
 }
 
 $database = new Database();
-/*
-$host = $_ENV['DB_HOST'];
-$dbname = $_ENV['DB_DATABASE'];
-$dbusername = $_ENV['DB_USERNAME'];
-$dbpassword = $_ENV['DB_PASSWORD'];
-*/
