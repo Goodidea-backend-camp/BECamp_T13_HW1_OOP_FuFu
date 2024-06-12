@@ -3,7 +3,7 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "FuFu\\Playgame\\": "src/"
+            "PlayGame\\": "classes/"
         }
     },
     "authors": [
