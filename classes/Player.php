@@ -11,36 +11,30 @@
 
 namespace PlayGame;
 
-
 require_once 'Database.php';
 require_once 'Character.php';
 
 class Player
 {
     use Character;
-    private $roleName;    
-
-    
+    private $roleName;
 
     // 初始化 Player 對象並設置其屬性。
     public function __construct()
     {
-        $this->character();        
+        $this->character();
         $this->database = new Database();
-        echo"\n";
-        $playerName = readline("請輸入玩家姓名：");
-        echo"\n";
-        $this->selectRole($playerName)->creatPoint();
-        $this->saveToDatabase($playerName);
-        
+        echo "\n";
+        $name = readline("請輸入玩家姓名：");
+        echo "\n";
+        $this->selectRole($name)->creatPoint();
+        $this->saveToDatabase($name);
     }
 
     // 從資料庫選取職業(印出所有職業->選取職業)
-    public function selectRole(string $name):self
+    public function selectRole(string $playerName): self
     {
-
-        //$database = new Database();
-        echo $this->database->getAllRoles($name);
+        echo $this->database->getAllRoles($playerName);
         $userChoice = readline("請填入1/2/3/4選擇職業：");
 
         try {
@@ -58,7 +52,7 @@ class Player
             } else {
                 View::clearScreen();
                 echo "無效的選擇！\n請重新選擇您喜歡的職業(1/2/3/4)\n";
-                self::selectRole($name);
+                self::selectRole($playerName);
             }
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -67,7 +61,7 @@ class Player
     }
 
     // 玩家自由配點能力值
-    public function creatPoint():void
+    public function creatPoint(): void
     {
         $attributes = [
             'physicalAttack' => '物理攻擊力',
@@ -121,17 +115,18 @@ class Player
     }
 
     // 玩家角色存入資料庫
-    public function saveToDatabase(string $playerName): void
-    {        
+    public function saveToDatabase(string $name): void
+    {
         $this->database->saveCharacter([
-            'character_name' => $playerName,
+            'character_name' => $name,
             'character_healthPoints' => $this->healthPoints,
             'character_physicalAttack' => $this->physicalAttack,
             'character_magicAttack' => $this->magicAttack,
             'character_physicalDefense' => $this->physicalDefense,
             'character_magicDefense' => $this->magicDefense,
             'character_magicPoints' => $this->magicPoints,
-            'character_luckiness' => $this->luckiness
+            'character_luckiness' => $this->luckiness,
+            'character_role'=> $this->roleName,
         ]);
         echo "玩家角色已成功保存到資料庫！";
     }
