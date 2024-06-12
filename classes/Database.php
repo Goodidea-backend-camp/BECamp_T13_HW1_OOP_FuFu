@@ -98,8 +98,25 @@ class Database
     public function saveCharacter($characterData)
     {
         $sql = "INSERT INTO `character` 
-                   (character_name, character_healthPoints, character_physicalAttack, character_magicAttack, character_physicalDefense, character_magicDefense, character_magicPoints, character_luckiness) 
-                   VALUES (:character_name, :character_healthPoints, :character_physicalAttack, :character_magicAttack, :character_physicalDefense, :character_magicDefense, :character_magicPoints, :character_luckiness)";
+                   (character_name, 
+                   character_healthPoints, 
+                   character_physicalAttack, 
+                   character_magicAttack, 
+                   character_physicalDefense, 
+                   character_magicDefense, 
+                   character_magicPoints, 
+                   character_luckiness,
+                   character_role) 
+                   VALUES (
+                   :character_name, 
+                   :character_healthPoints, 
+                   :character_physicalAttack, 
+                   :character_magicAttack, 
+                   :character_physicalDefense, 
+                   :character_magicDefense, 
+                   :character_magicPoints, 
+                   :character_luckiness,
+                   :character_role)";
         $this->query($sql, $characterData);
     }
 
@@ -120,13 +137,12 @@ class Database
     {
         $enemyData = $this->fetch("SELECT * FROM `enemy` WHERE  enemy_id = :enemy_id", [":enemy_id" => $enemy_id]);
 
-        // 如果找不到敵人，則拋出異常
-        if (!$enemyData) {
-            throw new \Exception("找不到角色ID為 $enemy_id 的角色資料");
-        }
 
-        // 返回敵人詳細資料
-        return $enemyData;
+        if ($enemyData) {
+            return $enemyData; // 如果找到結果，返回角色詳細資料
+        } else {
+            return null; // 如果沒有找到，返回空值
+        }
     }
     #endregion
 
@@ -159,14 +175,19 @@ class Database
     }
 
     // 取得遊戲紀錄
-    public function getRecord($character_name)
+    public function getRecord(string $character_name)
     {
-        $query = "SELECT player_name, player_levels, start_time, end_time 
-                  FROM `player` 
-                  WHERE player_name = :player_name
-                  ORDER BY start_time DESC";
-        $result = $this->fetchAll($query, [":player_name" => $character_name]);
-        return $result ?: null;
+        $sql = "SELECT 
+        p.player_name, 
+        c.character_role, 
+        p.player_levels, 
+        p.start_time, 
+        p.end_time 
+    FROM `player` p
+    JOIN `character` c ON p.player_name = c.character_name
+    WHERE p.player_name = :player_name
+    ORDER BY p.start_time DESC";
+        return $this->fetchAll($sql, [":player_name" => $character_name]);
     }
 
     #endregion
