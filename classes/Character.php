@@ -4,7 +4,9 @@ namespace PlayGame;
 
 trait Character
 {
+
     public $database;
+    public $name;
     public $healthPoints = 100;
     public $physicalAttack;
     public $magicAttack;
@@ -12,9 +14,10 @@ trait Character
     public $magicDefense;
     public $magicPoints;
     public $luckiness;
-    
+
     public function character()
     {
+        $this->name;
         $this->database;
         $this->healthPoints;
         $this->physicalAttack;
@@ -25,5 +28,4 @@ trait Character
         $this->magicPoints;
         $this->luckiness;
     }
-    
 }
